@@ -16,6 +16,10 @@ public class Shooting : MonoBehaviour
 		{
 			shoot();
 		}
+		if (Input.GetMouseButtonDown(1))
+		{
+			love();
+		}
 	}
 
 	void FixedUpdate()
@@ -25,6 +29,12 @@ public class Shooting : MonoBehaviour
 	}
 
 	void shoot()
+	{
+		_bullet = Instantiate(bulletDesign, startSpot.position, startSpot.rotation);
+		Rigidbody2D body = _bullet.GetComponent<Rigidbody2D>();
+		body.AddForce(startSpot.up * bF, ForceMode2D.Impulse);
+	}
+	void love()
 	{
 		_bullet = Instantiate(bulletDesign, startSpot.position, startSpot.rotation);
 		Rigidbody2D body = _bullet.GetComponent<Rigidbody2D>();

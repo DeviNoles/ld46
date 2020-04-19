@@ -6,6 +6,8 @@ using System;
 public class Enemy : MonoBehaviour
 {
 	public float health = 100f;
+	public float love = 0f;
+	private bool friendly = false;
 	public Transform body;
 	private NavMeshAgent _nav;
 	private float _speed = 5f;
@@ -17,17 +19,38 @@ public class Enemy : MonoBehaviour
 	}
 	void Update()
     {
-		Vector3 dir = body.position - transform.position;
-		float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-		myrb.rotation = angle;
-		dir.Normalize();
-		_mvmt = dir;
-
-
+		
 	}
 	void FixedUpdate()
     {
-		movePlayer(_mvmt);
+		if (friendly == false)
+		{
+			Vector3 dir = body.position - transform.position;
+			float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+			myrb.rotation = angle;
+			dir.Normalize();
+			_mvmt = dir;
+
+		}
+		else if (friendly == true)
+		{
+			if (GameObject.Find("enemy"))
+			{
+				Vector3 dir = GameObject.Find("enemy").transform.position - this.transform.position;
+				float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+				myrb.rotation = angle;
+				dir.Normalize();
+				_mvmt = dir;
+			}
+			else
+			{
+				Debug.Log("WAITING FOR BULLET");
+			}
+
+		}
+
+			movePlayer(_mvmt);
+		
     }
 	void movePlayer(Vector2 dir)
     {
@@ -35,7 +58,7 @@ public class Enemy : MonoBehaviour
     }
 
 	void OnCollisionEnter2D(Collision2D bullet)
-	{
+	{/*
 		if(bullet.gameObject.name == "bullet(Clone)")
         {
 			health = health - 10f;
@@ -44,6 +67,16 @@ public class Enemy : MonoBehaviour
 				Destroy(gameObject);
 			}
 			
+		}*/
+		if (bullet.gameObject.name == "bullet(Clone)")
+		{
+			love = love + 10f;
+			if (love >= 100)
+			{
+				Debug.Log("MAX LOVE");
+				friendly = true;
+			}
+
 		}
 	}
 }
